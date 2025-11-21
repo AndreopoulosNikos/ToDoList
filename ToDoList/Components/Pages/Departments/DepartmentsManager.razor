@@ -1,0 +1,25 @@
+﻿@page "/departments/departmentsmanager"
+@attribute [Authorize(Roles = "Admin")]
+@using Microsoft.AspNetCore.Authorization
+@using ToDoList.Components.IndividualComponents
+
+<PageTitle>Departments</PageTitle>
+
+<div class="mb-3">
+    <NavLink class="btn btn-success" href="/departments/adddepartment">
+        + Add Department
+    </NavLink>
+</div>
+
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+else
+{
+    <DepartmentsTable Departments="DepartmentsList"></DepartmentsTable>
+}
+
+
+

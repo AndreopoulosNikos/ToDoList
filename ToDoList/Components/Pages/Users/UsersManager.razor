@@ -1,0 +1,22 @@
+﻿@page "/users/usersmanager"
+@attribute [Authorize(Roles = "Admin")]
+@using Microsoft.AspNetCore.Authorization
+@using ToDoList.Components.IndividualComponents
+
+<PageTitle>Users</PageTitle>
+
+<div class="mb-3">
+    <NavLink class="btn btn-success" href="users/adduser">
+        + Add User
+    </NavLink>
+</div>
+
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+else
+{
+    <UsersTable Users="UsersList"></UsersTable>
+}

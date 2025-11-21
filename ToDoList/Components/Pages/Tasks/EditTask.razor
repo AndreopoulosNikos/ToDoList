@@ -1,0 +1,147 @@
+﻿@page "/tasks/edittask/{TaskId:int}"
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@inherits EditTaskBase
+
+<PageTitle>Edit Task</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm p-4" style="max-width:700px;margin:auto;">
+        <h3 class="mb-4">Edit Task</h3>
+
+        <EditForm Model="editTask" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+
+            <div class="mb-3">
+                <label>Subject</label>
+                <InputText class="form-control"
+                           @bind-Value="editTask.Subject"
+                           disabled="@( !(IsAdmin || IsInSameDepartment) )" />
+                <ValidationMessage For="@(() => editTask.Subject)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Action</label>
+                <InputTextArea class="form-control"
+                               @bind-Value="editTask.Action"
+                               disabled="@( !(IsAdmin || IsInSameDepartment) )" />
+                <ValidationMessage For="@(() => editTask.Action)" />
+            </div>
+
+            <AuthorizeView Roles="Admin">
+                <ChildContent Context="authContext">
+                    <div class="mb-3">
+                        <label>Department</label>
+                        <InputSelect class="form-control" @bind-Value="editTask.DepartmentId">
+                            <option value="">-- Select Department --</option>
+                            @foreach (var dept in Departments)
+                            {
+                                <option value="@dept.Id">@dept.Name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => editTask.DepartmentId)" />
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
+
+            <div class="mb-3">
+                <label>Status</label>
+                <InputSelect class="form-control"
+                             @bind-Value="editTask.TaskStatusId"
+                             disabled="@( !(IsAdmin || IsInSameDepartment) )">
+                    <option value="">-- Select Status --</option>
+                    @foreach (var status in Statuses)
+                    {
+                        <option value="@status.Id">@status.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => editTask.TaskStatusId)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Due Date</label>
+                <InputDate class="form-control"
+                           @bind-Value="editTask.DueDate"
+                           disabled="@( !(IsAdmin || IsInSameDepartment) )" />
+                <ValidationMessage For="@(() => editTask.DueDate)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Completed Date</label>
+                <InputDate class="form-control"
+                           @bind-Value="editTask.CompletedDate"
+                           disabled="@( !(IsAdmin || IsInSameDepartment) )" />
+                <ValidationMessage For="@(() => editTask.CompletedDate)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Notes (optional)</label>
+                <InputTextArea class="form-control"
+                               @bind-Value="editTask.Notes"
+                               disabled="@( !(IsAdmin || IsInSameDepartment) )" />
+            </div>
+
+            <div class="mb-3">
+                <label>Existing Files</label>
+                @if (ExistingFiles.Any())
+                {
+                    <ul class="list-group mb-2">
+                        @foreach (var file in ExistingFiles)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <a href="/api/file/files/@file.Id" target="_blank">@file.Filename</a>
+                                @if ((IsAdmin || IsInSameDepartment))
+                                {
+                                    <button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveExistingFile(file)">Remove</button>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+
+            @if ((IsAdmin || IsInSameDepartment))
+            {
+                <label>Attach PDF Files</label>
+                <InputFile OnChange="OnSingleFileSelected" accept=".pdf" class="form-control" />
+
+                @if (selectedFileHasValue)
+                {
+                    <button type="button" class="btn btn-primary mt-2" @onclick="UploadSelectedFile">
+                        + Add File
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary mt-2" disabled>
+                        + Add File
+                    </button>
+                }
+
+                @if (uploadedFiles.Any())
+                {
+                    <ul class="list-group mt-2">
+                        @foreach (var file in uploadedFiles)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @file.FileName
+                                <button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveTempFile(file)">Remove</button>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+
+            <div class="d-flex mt-2 justify-content-end">
+                <button type="submit" class="btn btn-primary me-2">Update</button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+            </div>
+
+        </EditForm>
+    </div>
+</div>

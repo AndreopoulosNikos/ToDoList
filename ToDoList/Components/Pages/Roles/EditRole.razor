@@ -1,0 +1,33 @@
+﻿@page "/roles/editrole/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Edit Role</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm p-4" style="max-width: 600px; margin: auto;">
+        <h3 class="mb-4">Edit Role</h3>
+
+        <EditForm Model="roleToUpdate" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+
+            <div class="mb-3 row align-items-center">
+                <label for="roleName" class="col-sm-4 col-form-label">Role Name</label>
+                <div class="col-sm-8">
+                    <InputText id="roleName" class="form-control" @bind-Value="roleToUpdate!.Name" />
+                    <ValidationMessage For="@(() => roleToUpdate.Name)" class="text-danger" />
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary me-2">Update</button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+</div>

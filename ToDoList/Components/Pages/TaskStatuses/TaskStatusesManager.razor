@@ -1,0 +1,25 @@
+﻿@page "/taskstatuses/taskstatusesmanager"
+@attribute [Authorize(Roles = "Admin")]
+@using Microsoft.AspNetCore.Authorization
+@using ToDoList.Components.IndividualComponents
+
+<PageTitle>Task Statuses</PageTitle>
+
+<div class="mb-3">
+    <NavLink class="btn btn-success" href="/taskstatuses/addtaskstatus">
+        + Add Task Status
+    </NavLink>
+</div>
+
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+else
+{
+    <TaskStatusesTable TaskStatuses="TaskStatusesList"></TaskStatusesTable>
+}
+
+
+

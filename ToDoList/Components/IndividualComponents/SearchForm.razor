@@ -1,0 +1,86 @@
+﻿<div class="card p-2 mb-2">
+
+    <div class="row g-2">
+
+        <!-- Top row: Subject, Department, Status -->
+        <div class="d-flex gap-2 mb-2">
+
+            <div class="flex-fill">
+                <input class="form-control form-control-sm" placeholder="Search subject..."
+                       @bind="SubjectSearch" @bind:event="oninput" />
+            </div>
+
+            <div class="flex-fill">
+                <select class="form-select form-select-sm" @bind="DepartmentId">
+                    <option value="">All Departments</option>
+                    @foreach (var dep in Departments)
+                    {
+                        <option value="@dep.Id">@dep.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="flex-fill">
+                <select class="form-select form-select-sm" @bind="TaskStatusId">
+                    <option value="">All Statuses</option>
+                    @foreach (var status in TaskStatuses)
+                    {
+                        <option value="@status.Id">@status.Name</option>
+                    }
+                </select>
+            </div>
+
+        </div>
+
+        <!-- Date ranges (shown only if ShowDateFilters is true) -->
+        @if (ShowDateFilters)
+        {
+            <div class="row g-2">
+
+                <!-- Due Date -->
+                <div class="col-md-6">
+                    <div class="card p-2 border-secondary">
+                        <h6 class="card-title mb-2">Due Date</h6>
+                        <div class="row g-1">
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">From</label>
+                                <input type="date" class="form-control form-control-sm" @bind="DueDateFrom" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">To</label>
+                                <input type="date" class="form-control form-control-sm" @bind="DueDateTo" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Date -->
+                <div class="col-md-6">
+                    <div class="card p-2 border-secondary">
+                        <h6 class="card-title mb-2">Completed Date</h6>
+                        <div class="row g-1">
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">From</label>
+                                <input type="date" class="form-control form-control-sm" @bind="CompletedDateFrom" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">To</label>
+                                <input type="date" class="form-control form-control-sm" @bind="CompletedDateTo" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+        <!-- Buttons at bottom -->
+        <div class="col-12 mt-2 d-flex gap-2">
+            <button class="btn btn-primary btn-sm" @onclick="ApplyFilter">Search</button>
+            <button class="btn btn-secondary btn-sm" @onclick="Reset">Reset</button>
+            <button class="btn btn-outline-secondary btn-sm" @onclick="ToggleDateFilters">
+                @((ShowDateFilters ? "Hide" : "Show") + " Date Filters")
+            </button>
+        </div>
+
+    </div>
+</div>

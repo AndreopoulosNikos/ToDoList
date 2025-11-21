@@ -1,0 +1,84 @@
+﻿@page "/users/adduser"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Add User</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm p-4" style="max-width: 600px; margin: auto;">
+        <h3 class="mb-4">Add New User</h3>
+
+        <EditForm Model="newUser" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+
+            <div class="mb-3">
+                <label>Username</label>
+                <InputText class="form-control" @bind-Value="newUser.Username" />
+                <ValidationMessage For="@(() => newUser.Username)" />
+            </div>
+
+            <div class="mb-3">
+                <label>First Name</label>
+                <InputText class="form-control" @bind-Value="newUser.FirstName" />
+                <ValidationMessage For="@(() => newUser.FirstName)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Last Name</label>
+                <InputText class="form-control" @bind-Value="newUser.LastName" />
+                <ValidationMessage For="@(() => newUser.LastName)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Department</label>
+                <InputSelect class="form-control" @bind-Value="newUser.DepartmentId">
+                    <option value="">-- Select Department --</option>
+                    @foreach (var dept in Departments)
+                    {
+                        <option value="@dept.Id">@dept.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => newUser.DepartmentId)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Role</label>
+                <InputSelect class="form-control" @bind-Value="newUser.RoleId">
+                    <option value="">-- Select Role (Optional) --</option>
+                    @foreach (var role in Roles)
+                    {
+                        <option value="@role.Id">@role.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => newUser.RoleId)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Password</label>
+                <InputText type="password" class="form-control" @bind-Value="newUser.Password" />
+                <ValidationMessage For="@(() => newUser.Password)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Confirm Password</label>
+                <InputText type="password" class="form-control" @bind-Value="newUser.ConfirmPassword" />
+                <ValidationMessage For="@(() => newUser.ConfirmPassword)" />
+            </div>
+
+            <div class="form-check mb-3">
+                <InputCheckbox class="form-check-input" @bind-Value="newUser.MustChangePassword" />
+                <label class="form-check-label">Require password change on next login</label>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success me-2">Save</button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+</div>

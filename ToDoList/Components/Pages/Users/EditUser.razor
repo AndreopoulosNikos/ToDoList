@@ -1,0 +1,92 @@
+﻿@page "/users/edituser/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+
+<PageTitle>Edit User</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm p-4" style="max-width: 600px; margin: auto;">
+        <h3 class="mb-4">Edit User</h3>
+
+        <EditForm Model="editUser" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+
+            <!-- Username -->
+            <div class="mb-3 row align-items-center">
+                <label class="col-sm-4 col-form-label">Username</label>
+                <div class="col-sm-8">
+                    <InputText class="form-control" @bind-Value="editUser.Username" />
+                    <ValidationMessage For="@(() => editUser.Username)" class="text-danger" />
+                </div>
+            </div>
+
+            <!-- First Name -->
+            <div class="mb-3 row align-items-center">
+                <label class="col-sm-4 col-form-label">First Name</label>
+                <div class="col-sm-8">
+                    <InputText class="form-control" @bind-Value="editUser.FirstName" />
+                    <ValidationMessage For="@(() => editUser.FirstName)" class="text-danger" />
+                </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="mb-3 row align-items-center">
+                <label class="col-sm-4 col-form-label">Last Name</label>
+                <div class="col-sm-8">
+                    <InputText class="form-control" @bind-Value="editUser.LastName" />
+                    <ValidationMessage For="@(() => editUser.LastName)" class="text-danger" />
+                </div>
+            </div>
+
+            <!-- Department -->
+            <div class="mb-3 row align-items-center">
+                <label class="col-sm-4 col-form-label">Department</label>
+                <div class="col-sm-8">
+                    <InputSelect class="form-control" @bind-Value="editUser.DepartmentId">
+                        <option value="">-- Select Department --</option>
+                        @foreach (var dept in Departments)
+                        {
+                            <option value="@dept.Id">@dept.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => editUser.DepartmentId)" class="text-danger" />
+                </div>
+            </div>
+
+            <!-- Role -->
+            <div class="mb-3 row align-items-center">
+                <label class="col-sm-4 col-form-label">Role</label>
+                <div class="col-sm-8">
+                    <InputSelect class="form-control" @bind-Value="editUser.RoleId">
+                        <option value="">-- Select Role --</option>
+                        @foreach (var role in Roles)
+                        {
+                            <option value="@role.Id">@role.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => editUser.RoleId)" class="text-danger" />
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+
+                <NavLink class="btn btn-warning" href="@($"/users/resetpassword/{editUser.Id}")">
+                    Reset Password
+                </NavLink>
+
+                <div>
+                    <button type="submit" class="btn btn-primary me-2">Update</button>
+                    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                </div>
+            </div>
+
+        </EditForm>
+    </div>
+</div>

@@ -1,0 +1,106 @@
+﻿@page "/tasks/addtask"
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Add Task</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm p-4" style="max-width: 700px; margin: auto;">
+        <h3 class="mb-4">Add New Task</h3>
+
+        <EditForm Model="newTask" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+
+            <div class="mb-3">
+                <label>Subject</label>
+                <InputText class="form-control" @bind-Value="newTask.Subject" />
+                <ValidationMessage For="@(() => newTask.Subject)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Action</label>
+                <InputTextArea class="form-control" @bind-Value="newTask.Action" />
+                <ValidationMessage For="@(() => newTask.Action)" />
+            </div>
+            <AuthorizeView Roles="Admin">
+                <ChildContent Context="authContext">
+                    <div class="mb-3">
+                        <label>Department</label>
+                        <InputSelect class="form-control" @bind-Value="newTask.DepartmentId">
+                            <option value="">-- Select Department --</option>
+                            @foreach (var dept in Departments)
+                            {
+                                <option value="@dept.Id">@dept.Name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => newTask.DepartmentId)" />
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
+            <div class="mb-3">
+                <label>Status</label>
+                <InputSelect class="form-control" @bind-Value="newTask.TaskStatusId">
+                    <option value="">-- Select Status --</option>
+                    @foreach (var status in Statuses)
+                    {
+                        <option value="@status.Id">@status.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => newTask.TaskStatusId)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Due Date</label>
+                <InputDate class="form-control" @bind-Value="newTask.DueDate" />
+                <ValidationMessage For="@(() => newTask.DueDate)" />
+            </div>
+
+            <div class="mb-3">
+                <label>Notes (optional)</label>
+                <InputTextArea class="form-control" @bind-Value="newTask.Notes" />
+            </div>
+
+            <div class="mb-3">
+                <label>Attach PDF Files</label>
+
+                <InputFile OnChange="OnSingleFileSelected" accept=".pdf" class="form-control" />
+                @if (selectedFileHasValue)
+                {
+                    <button type="button" class="btn btn-primary mt-2" @onclick="UploadSelectedFile">
+                       + Add File
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary mt-2" disabled>
+                       + Add File
+                    </button>
+                }
+
+                @if (uploadedFiles.Any())
+                {
+                    <ul class="list-group mt-2">
+                        @foreach (var file in uploadedFiles)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @file.FileName
+                                <button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveTempFile(file)">Remove</button>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success me-2">+ Save</button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+            </div>
+
+        </EditForm>
+    </div>
+</div>

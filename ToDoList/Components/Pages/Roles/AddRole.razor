@@ -1,0 +1,35 @@
+﻿@page "/roles/addrole"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Add Role</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm p-4" style="max-width: 600px; margin: auto;">
+        <h3 class="mb-4">Add New Department</h3>
+
+        <EditForm Model="newRole" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+            <div class="mb-3 row align-items-center">
+                <label for="roleName" class="col-sm-4 col-form-label">Department Name</label>
+                <div class="col-sm-8">
+                    <InputText id="roleName" class="form-control" @bind-Value="newRole.Name" />
+                    <ValidationMessage For="@(() => newRole.Name)" class="text-danger" />
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success me-2 d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="me-1" viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg>
+                    Save
+                </button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+</div>

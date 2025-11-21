@@ -1,0 +1,75 @@
+/* This table stores department information */
+CREATE TABLE Departments 
+(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,  /* Unique identifier for each department */
+    Name TEXT NOT NULL UNIQUE               /* Name of the department, must be unique */
+);
+
+/* This table stores roles information */
+CREATE TABLE Roles 
+(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,  /* Unique identifier for each role */
+    Name TEXT NOT NULL UNIQUE               /* Name of the role, must be unique */
+);
+
+/* This table stores task statuses information */
+CREATE TABLE TaskStatuses 
+(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,  /* Unique identifier for each task status */
+    Name TEXT NOT NULL UNIQUE               /* Name of the task status, must be unique */
+);
+
+CREATE TABLE Files 
+(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,  /* Unique identifier for each file */
+    Filename TEXT NOT NULL,                /* Name of the file*/
+    FilePath TEXT NOT NULL		   /* Path of the file*/
+);
+
+
+/* Table to store user information */
+CREATE TABLE Users
+(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,           /* Unique identifier for each user */
+    Username TEXT NOT NULL UNIQUE,                  /* Username, must be unique and not null */
+    FirstName TEXT,                                 /* First name, nullable */
+    LastName TEXT,                                  /* Last name, nullable */
+    DepartmentId INTEGER,                           /* Nullable foreign key referencing Departments */
+    RoleId INTEGER,                                 /* Nullable foreign key referencing Roles */
+    HashedPassword TEXT NOT NULL,                   /* Hashed password, cannot be null */
+    MustChangePassword INTEGER NOT NULL DEFAULT 0,  /* Flag indicating if user must change password (0 = false, 1 = true) */
+    FOREIGN KEY (DepartmentId) REFERENCES Departments(Id),
+    FOREIGN KEY (RoleId) REFERENCES Roles(Id)
+);
+
+
+/* Table to store tasks information */
+CREATE TABLE Tasks
+(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,      /* Unique identifier for each task */
+    Subject TEXT NOT NULL,                      /* Title or summary of the task */
+    Action TEXT NOT NULL,                       /* Action required for the task */
+
+    DueDate DATETIME NOT NULL,                  /* Expected completion date */
+    CompletedDate DATETIME,                     /* Actual completion date (nullable) */
+
+    Notes TEXT,                                 /* Optional additional notes about the task */
+    DepartmentId INTEGER NOT NULL,              /* Department responsible for the task */
+    TaskStatusId INTEGER NOT NULL,              /* Current status of the task */
+
+    FOREIGN KEY (DepartmentId) REFERENCES Departments(Id),
+    FOREIGN KEY (TaskStatusId) REFERENCES TaskStatuses(Id)
+);
+
+
+
+/* Table to link tasks with files (many-to-many relationship) */
+CREATE TABLE TaskFiles
+(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,      /* Unique identifier for each task-file association */
+    TaskId INTEGER NOT NULL,                   /* Foreign key referencing the task */
+    FileId INTEGER NOT NULL,                   /* Foreign key referencing the file */
+    FOREIGN KEY (TaskId) REFERENCES Tasks(Id), /* Ensures TaskId exists in Tasks table */
+    FOREIGN KEY (FileId) REFERENCES Files(Id), /* Ensures FileId exists in Files table */
+    UNIQUE(TaskId, FileId)                     /* Prevents duplicate associations between the same task and file */
+);

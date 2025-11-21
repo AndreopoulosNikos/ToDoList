@@ -1,0 +1,24 @@
+﻿@page "/"
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using ToDoList.Models
+@using ToDoList.Components.IndividualComponents
+
+<PageTitle>Tasks</PageTitle>
+
+
+
+<SearchForm Tasks="TaskList" OnFiltered="OnFiltered" />
+
+<div class="mb-3">
+    <NavLink class="btn btn-success" href="tasks/addtask">
+        + Add Task
+    </NavLink>
+</div>
+
+<TasksTable Tasks="FilteredTasks" OnTaskDeleted="HandleTaskDeleted" />
+
+<div class="d-flex justify-content-start mt-3">
+    <button class="btn btn-primary" @onclick="ExportToExcel">Export to Excel</button>
+</div>

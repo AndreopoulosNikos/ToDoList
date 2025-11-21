@@ -1,0 +1,25 @@
+﻿@page "/roles/rolesmanager"
+@attribute [Authorize(Roles = "Admin")]
+@using Microsoft.AspNetCore.Authorization
+@using ToDoList.Components.IndividualComponents
+
+<PageTitle>Roles</PageTitle>
+
+<div class="mb-3">
+    <NavLink class="btn btn-success" href="roles/addrole">
+        + Add Role
+    </NavLink>
+</div>
+
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+else
+{
+    <RolesTable Roles="RolesList"></RolesTable>
+}
+
+
+
