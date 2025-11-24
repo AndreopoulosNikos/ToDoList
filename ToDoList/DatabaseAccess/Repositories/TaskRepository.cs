@@ -24,7 +24,7 @@ namespace ToDoList.DatabaseAccess.Repositories
         {
             try
             {
-                var sql = "SELECT * FROM Tasks";
+                var sql = "SELECT * FROM Tasks ORDER BY Id DESC;";
                 var tasks = await connection.QueryAsync<TaskItem>(sql, transaction: transaction);
                 return tasks.ToList();
             }
@@ -55,7 +55,8 @@ namespace ToDoList.DatabaseAccess.Repositories
                 var sql = "SELECT t.Id, t.Subject, t.Action, t.DueDate,t.CompletedDate,t.Notes,t.DepartmentId,TaskStatusId, d.Name AS DepartmentName, ts.Name AS TaskStatusName " +
                           "FROM Tasks t " +
                           "LEFT JOIN Departments d ON t.DepartmentId = d.Id " +
-                          "LEFT JOIN TaskStatuses ts ON t.TaskStatusId = ts.Id;";
+                          "LEFT JOIN TaskStatuses ts ON t.TaskStatusId = ts.Id " +
+                          "ORDER BY t.Id DESC;";
 
                 var tasks = await connection.QueryAsync<TaskItem>(sql, transaction: transaction);
                 return tasks.ToList();
