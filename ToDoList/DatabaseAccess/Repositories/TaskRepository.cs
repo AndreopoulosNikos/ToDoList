@@ -52,7 +52,7 @@ namespace ToDoList.DatabaseAccess.Repositories
         {
             try
             {
-                var sql = "SELECT t.Id, t.Subject, t.Action, t.DueDate,t.CompletedDate,t.Notes, d.Name AS DepartmentName, ts.Name AS TaskStatusName " +
+                var sql = "SELECT t.Id, t.Subject, t.Action, t.DueDate,t.CompletedDate,t.Notes,t.DepartmentId,TaskStatusId, d.Name AS DepartmentName, ts.Name AS TaskStatusName " +
                           "FROM Tasks t " +
                           "LEFT JOIN Departments d ON t.DepartmentId = d.Id " +
                           "LEFT JOIN TaskStatuses ts ON t.TaskStatusId = ts.Id;";

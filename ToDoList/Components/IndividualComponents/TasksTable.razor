@@ -28,7 +28,7 @@
             {
                 <tr class="@(item.CompletedDate == null && item.DueDate.Date < DateTime.Today ? "table-danger" : "")">
                     <!-- Actions column -->
-                    <td style="width: 150px; vertical-align:middle;">
+                    <td style="max-width: 150px; vertical-align:middle;">
                         <button class="btn btn-sm btn-primary me-1" @onclick="() => EdiTask(item.Id)">Edit</button>
                         <AuthorizeView Roles="Admin">
                             <button class="btn btn-sm btn-danger" @onclick="() => DeleteTask(item.Id)">Delete</button>
@@ -36,7 +36,7 @@
                     </td>
                     <td style="vertical-align:middle;">@item.Id</td>
                     <td style="vertical-align:middle;">@item.Subject</td>
-                    <td style="vertical-align:middle;">@item.Action</td>
+                    <td style="max-width:250px; white-space:normal; word-wrap:break-word; vertical-align:middle;">@item.Action</td>
                     <td style="vertical-align:middle;">@item.DepartmentName</td>
                     <td style="vertical-align:middle;">@item.TaskStatusName</td>
                     <td style="vertical-align:middle;">@item.DueDate.ToString("d", BrowserCulture)</td>
@@ -45,7 +45,7 @@
                                         ? item.CompletedDate.Value.ToString("d", BrowserCulture)
                                         : string.Empty)
                     </td>
-                    <td style="max-width:250px; white-space:normal; word-wrap:break-word; vertical-align:middle;">
+                    <td style="max-width:400px; white-space:normal; word-wrap:break-word; vertical-align:middle;">
                         @item.Notes
                     </td>
                 </tr>
